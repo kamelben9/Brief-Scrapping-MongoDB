@@ -6,8 +6,14 @@
 
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
+import pymongo
 
 
 class ScrapImdbPipeline:
+
+    # def __init__(self):
+    #     self.conn = pymongo.MongoClient
+
+
     def process_item(self, item, spider):
         return item

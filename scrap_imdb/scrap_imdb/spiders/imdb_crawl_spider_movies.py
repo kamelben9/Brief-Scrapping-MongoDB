@@ -33,5 +33,6 @@ class ImdbCrawlSpiderSpider(CrawlSpider):
         item['synopsis'] = response.xpath('/html/body/div[2]/main/div/section[1]/section/div[3]/section/section/div[3]/div[2]/div[1]/div[1]/p/span[1]/text()').get()
         item['acteurs'] = response.xpath('/html/body/div[2]/main/div/section[1]/section/div[3]/section/section/div[3]/div[2]/div[1]/div[3]/ul/li[3]/div/ul/li/a/text()').extract()
         item['public'] = response.xpath('/html/body/div[2]/main/div/section[1]/section/div[3]/section/section/div[2]/div[1]/div/ul/li[2]/a/text()').get()
+        item['pays_origine'] = response.xpath('//section/div/ul/li[@class = "ipc-metadata-list__item"][1]/div[@class = "ipc-metadata-list-item__content-container"]/ul/li/a[@class = "ipc-metadata-list-item__list-content-item ipc-metadata-list-item__list-content-item--link"]/text()').getall()
         return item
 

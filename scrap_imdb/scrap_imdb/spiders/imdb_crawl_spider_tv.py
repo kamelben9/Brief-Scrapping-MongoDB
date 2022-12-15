@@ -1,6 +1,7 @@
 import scrapy
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
+import re
 
 
 class ImdbCrawlSpiderSpider(CrawlSpider):
@@ -21,6 +22,9 @@ class ImdbCrawlSpiderSpider(CrawlSpider):
         rule_imdb_details ,
     )
 
+
+
+
     def parse_item(self, response):
         item = {}
         item['title'] = response.xpath('//h1/text()').get()
@@ -29,8 +33,15 @@ class ImdbCrawlSpiderSpider(CrawlSpider):
         item['genre']= response.xpath('//span[@class="ipc-chip__text"]/text()').getall()
         item['date']= response.xpath('//a[@class="ipc-link ipc-link--baseAlt ipc-link--inherit-color sc-8c396aa2-1 WIUyh"]/text()').get()
         item['synopsis']=response.xpath('//span[@class="sc-16ede01-1 kgphFu"]/text()').get()
-        if len(response.xpath('/html/body/div[2]/main/div/section[1]/section/div[3]/section/section/div[2]/div[1]/div/ul/li[4]/text()')) > 2:
-            item['timeM'] = int(response.xpath('/html/body/div[2]/main/div/section[1]/section/div[3]/section/section/div[2]/div[1]/div/ul/li[4]/text()')[0].extract()) * 60 + int(response.xpath('/html/body/div[2]/main/div/section[1]/section/div[3]/section/section/div[2]/div[1]/div/ul/li[4]/text()')[3].extract())
-        else:
-            item['timeM'] = int(response.xpath('/html/body/div[2]/main/div/section[1]/section/div[3]/section/section/div[2]/div[1]/div/ul/li[4]/text()')[0].extract())
+        duration = response.xpath('//ul[@data-testid="hero-title-block__metadata"]/*[last()]/text()').extract()
+        if duration == []:
+                item['durée'] = 0
+        elif len(duration)== 5  :
+            item['durée'] = int(duration[0]) * 60 + int(duration[3])
+        elif len(duration) == 2 :
+            if(duration[1]=="h"):
+                item['durée'] =  int(duration[0]) * 60 
+            else:
+                item['durée'] =  int(duration[0])
+        item['pays_origine'] = response.xpath('//section/div/ul/li[@class = "ipc-metadata-list__item"][1]/div[@class = "ipc-metadata-list-item__content-container"]/ul/li/a[@class = "ipc-metadata-list-item__list-content-item ipc-metadata-list-item__list-content-item--link"]/text()').getall()
         return item
