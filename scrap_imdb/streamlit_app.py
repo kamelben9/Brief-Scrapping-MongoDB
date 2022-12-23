@@ -39,7 +39,7 @@ def search_by_score(score):
 
 
 st.title("Movie Finder")
-st.text("Trouvez le meilleur film pour vous !")
+st.text("Trouvez le meilleur film pour vous!")
 st.image(image = "scrap_imdb/Film.jpg")
 
 with st.sidebar :
